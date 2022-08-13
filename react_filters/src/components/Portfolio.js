@@ -1,13 +1,47 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import propTypes from "prop-types";
 import ProjectList from "./ProjectList";
 import Toolbar from "./Toolbar";
 
-class Portfolio extends Component {
+function Portfolio(props) {
+  const [state, setState] = useState({ selected: "All" });
+  const filters = ["All", "Websites", "Flayers", "Business Cards"];
+
+  function handlerClick(filter) {
+    setState({ selected: filter });
+  }
+
+  function handlerList() {
+    return state.selected === "All"
+      ? props.list
+      : props.list.filter((item) => item.category === state.selected);
+  }
+
+  return (
+    <>
+      <Toolbar
+        filters={filters}
+        selected={state.selected}
+        onSelectFilter={(filter) => {
+          handlerClick(filter);
+        }}
+      />
+      <ProjectList projects={handlerList()} />
+    </>
+  );
+}
+
+Portfolio.propTypes = {
+  filters: propTypes.array,
+  state: propTypes.object,
+};
+
+/*class Portfolio extends Component {
   static propTypes = {
     filters: propTypes.array,
     state: propTypes.object,
   };
+
   constructor(props) {
     super(props);
     this.state = { selected: "All" };
@@ -17,11 +51,13 @@ class Portfolio extends Component {
   handlerClick(filter) {
     this.setState({ selected: filter });
   }
+
   handlerList() {
     return this.state.selected === "All"
       ? this.props.list
       : this.props.list.filter((item) => item.category === this.state.selected);
   }
+
   render() {
     return (
       <div>
@@ -37,5 +73,5 @@ class Portfolio extends Component {
     );
   }
 }
-
+*/
 export default Portfolio;
